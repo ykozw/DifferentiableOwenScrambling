@@ -30,8 +30,8 @@ Executable have common parameters:
 * sobol: file to read initial samples from. Does not need to be from the Sobol' sequence or a (0, m, 2)-net in txt file. Only N * D coordinates are read from this file, therefore, at least the dimension should match with the parameter provided. Files can be found in `data/` 
 * lr: learning rate
 * alpha: smoothing parameter
-* lrSchedule: learning rate factor. $lr_{i} = (lrSchedule)^{i} * lr$
-* alphaSchedule: alpha factor. $\alpha_{i} = (alphaSchedule)^{i} * \alpha$
+* lrSchedule: learning rate factor. $lr_{i} = (lr_{Schedule})^{i} * lr$
+* alphaSchedule: alpha factor. $\alpha_{i} = (\alpha_{Schedule})^{i} * \alpha$
 * prefix: output directory + prefix. See below for more explaination on outputs of the code
 * fill_depth: simulates the bottom of the owen tree by adding small random noise to each points
 
