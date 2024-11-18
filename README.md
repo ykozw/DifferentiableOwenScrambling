@@ -40,7 +40,7 @@ Loss parameters:
 * db: path to intrand database (required for integration error optimization), files are provided in `data/`
 * batchSize: batch size for integration error optimization. 
 * target: targetPCF
-* sigmaGBN: sigma value for GBN. The `actual` gbn factor is $\sigmaGBN * N^{-2/D}$
+* sigmaGBN: sigma value for GBN. The `actual` gbn factor is $\sigma_{GBN} * N^{-2/D}$
 
 The scripts outputs multiple file:
 
