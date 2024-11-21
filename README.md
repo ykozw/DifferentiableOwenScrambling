@@ -1,9 +1,18 @@
 # Differentiable Owen Scrambling 
 
-Repository for the paper : Differentiable Owen Scrambling 
+Repository for the paper : Differentiable Owen Scrambling, SIGGRAPH ASIA 2024.
 
-```
-TBC
+``` bibtex
+@article{owenDiff24,
+  title    = {Differentiable Owen Scrambling},
+  author   = {Bastien Doignies and David Coeurjolly and Nicolas Bonneel and  Julie Digne and Jean-Claude Iehl and Victor Ostromoukhov},
+  year     = {2024},
+  month    = dec,
+  journal  = { {ACM} Transactions on Graphics (Proceedings of SIGGRAPH Asia)},
+  doi      = {10.1145/3687764},
+  volume   = 43,
+  number   = 6
+}
 ```
 
 # Dependancies
