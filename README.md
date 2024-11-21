@@ -17,7 +17,7 @@ Repository for the paper : [Differentiable Owen Scrambling](https://dl.acm.org/d
 
 # Dependancies
 
-No dependancies. The code requires a compiler supporting C++17 (C++11 possible by removing constexpr).
+The code only requires a compiler supporting C++17 (C++11 possible by removing constexpr).
 
 # Building
 
