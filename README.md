@@ -23,7 +23,7 @@ The code only requires a compiler supporting C++17 (C++11 possible by removing c
 
 The project is setup with cmake. The commands to run are the following: 
 
-```
+``` bash
 mkdir build
 cd build
 cmake ..
