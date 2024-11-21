@@ -1,6 +1,6 @@
 # Differentiable Owen Scrambling 
 
-Repository for the paper : Differentiable Owen Scrambling, SIGGRAPH ASIA 2024.
+Repository for the paper : [Differentiable Owen Scrambling](https://dl.acm.org/doi/10.1145/3687764), SIGGRAPH ASIA 2024.
 
 ``` bibtex
 @article{owenDiff24,
