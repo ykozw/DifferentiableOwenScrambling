@@ -44,7 +44,7 @@ double PCF::operator()(const PointArray& pts, PointArray& grad, std::vector<doub
         double pcfValue = 0.0;
 
         #pragma omp parallel for reduction(+: pcfValue)
-        for (unsigned int i = 0; i < N; i++)
+        for (int i = 0; i < N; i++)
         {
             for (unsigned int j = i + 1; j < N; j++)
             {
@@ -52,7 +52,7 @@ double PCF::operator()(const PointArray& pts, PointArray& grad, std::vector<doub
                 double dist_squared = 0.0;
                 for (unsigned int d = 0; d < D; d++)
                 {
-                    const double dx = (pts[{i, d}] - pts[{j, d}]);
+                    const double dx = (pts[{(uint32_t)i, d}] - pts[{j, d}]);
                     dist_squared += dx * dx;
                 }
 
@@ -69,7 +69,7 @@ double PCF::operator()(const PointArray& pts, PointArray& grad, std::vector<doub
 
                 // No x0.5 in grad because it is summed twice. Signs cancels out
                 for (unsigned int d = 0; d < D; d++)
-                    tmpGrad[{i, d}] += gaussianNorm * isigma2 * value * (pts[{i, d}] - pts[{j, d}]) * dr / dist;
+                    tmpGrad[{(uint32_t)i, d}] += gaussianNorm * isigma2 * value * (pts[{(uint32_t)i, d}] - pts[{j, d}]) * dr / dist;
             }
         }
 
@@ -85,11 +85,11 @@ double PCF::operator()(const PointArray& pts, PointArray& grad, std::vector<doub
         
         // gradient of mse
         #pragma omp parallel for
-        for (unsigned int i = 0; i < N; i++)
+        for (int i = 0; i < N; i++)
         {
             for (unsigned int d = 0; d < D; d++)
             {
-                grad[{i, d}] += 2 * weight * error * norm * tmpGrad[{i, d}];
+                grad[{(uint32_t)i, d}] += 2 * weight * error * norm * tmpGrad[{(uint32_t)i, d}];
             }
         }
 

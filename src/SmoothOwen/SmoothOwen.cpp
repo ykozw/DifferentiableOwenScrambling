@@ -82,16 +82,16 @@ void SmoothOwenScrambling::ExportGrad(const std::string& filename, const BinaryA
     out << std::setprecision(20) << std::fixed;
 
     #pragma omp parallel for
-    for (unsigned int i = 0; i < pts.shape[0]; i++)
+    for (int i = 0; i < pts.shape[0]; i++)
     {
         unsigned int select = 0;
         
         for (unsigned int depth = 0; depth < pts.shape[2]; depth++)
         {
-            auto flip = DFF(pts[{i, d, depth}], thetas[d][select]);
+            auto flip = DFF(pts[{(uint32_t)i, d, depth}], thetas[d][select]);
 
             gradientsValues[d][select][i] = flip.second / (1 << (depth + 1));
-            select             = 2 * select + pts[{i, d, depth}] + 1;
+            select             = 2 * select + pts[{(uint32_t)i, d, depth}] + 1;
         }
     }
 
@@ -135,18 +135,18 @@ void SmoothOwenScrambling::forward(const BinaryArray& pts, PointArray& out)
     for (unsigned int d = 0; d < pts.shape[1]; d++)
     {
         #pragma omp parallel for
-        for (unsigned int i = 0; i < pts.shape[0]; i++)
+        for (int i = 0; i < pts.shape[0]; i++)
         {
             unsigned int select = 0;
-            out[{i, d}] = 0.;
+            out[{(uint32_t)i, d}] = 0.;
             
             for (unsigned int depth = 0; depth < pts.shape[2]; depth++)
             {
-                auto flip = DFF(pts[{i, d, depth}], thetas[d][select]);
+                auto flip = DFF(pts[{(uint32_t)i, d, depth}], thetas[d][select]);
 
-                out[{i, d}]                  += flip.first  / (1 << (depth + 1));
+                out[{(uint32_t)i, d}]                  += flip.first  / (1 << (depth + 1));
                 gradientsValues[d][select][i] = flip.second / (1 << (depth + 1));
-                select             = 2 * select + pts[{i, d, depth}] + 1;
+                select             = 2 * select + pts[{(uint32_t)i, d, depth}] + 1;
             }
         }
     }
@@ -174,11 +174,11 @@ void FillRandomLeftoverBits(PointArray& dest, unsigned int seed, unsigned int De
 void ApplyLeftoverBits(PointArray& dest, const PointArray& bits)
 {
     #pragma omp parallel for
-    for (unsigned int i = 0; i < dest.shape[0]; i++)
+    for (int i = 0; i < dest.shape[0]; i++)
     {
         for (unsigned int j = 0; j < dest.shape[1]; j++)
         {
-            dest[{i, j}] += bits[{i, j}];
+            dest[{(uint32_t)i, j}] += bits[{(uint32_t)i, j}];
         }
     }
 }
@@ -189,7 +189,7 @@ void SmoothOwenScrambling::backward(const PointArray& gradients, double lr)
     for (unsigned int d = 0; d < gradients.shape[1]; d++)
     {
         #pragma omp parallel for
-        for (unsigned int p = 0; p < thetas[d].size(); p++)
+        for (int p = 0; p < thetas[d].size(); p++)
         {
             double gradientValue = 0.0;
             for (unsigned int pi = 0; pi < gradientsIndices[d][p].size(); pi++)
@@ -207,15 +207,15 @@ void SmoothOwenScrambling::backwardStore(const PointArray& gradients, double lr,
     for (unsigned int d = 0; d < gradients.shape[1]; d++)
     {
         #pragma omp parallel for
-        for (unsigned int p = 0; p < thetas[d].size(); p++)
+        for (int p = 0; p < thetas[d].size(); p++)
         {
-            grads[{d, p}] = 0.0;
+            grads[{d, (uint32_t)p}] = 0.0;
             for (unsigned int pi = 0; pi < gradientsIndices[d][p].size(); pi++)
             {
                 unsigned int pointIndex = gradientsIndices[d][p][pi];
-                grads[{d, p}] += gradientsValues[d][p][pointIndex] * gradients[{pointIndex, d}];
+                grads[{d, (uint32_t)p}] += gradientsValues[d][p][pointIndex] * gradients[{pointIndex, d}];
             }
-            thetas[d][p] -= lr * grads[{d, p}];
+            thetas[d][p] -= lr * grads[{d, (uint32_t)p}];
         }
     }
 }
@@ -231,25 +231,25 @@ void SmoothOwenScrambling::evaluate(const BinaryArray& pts, PointArray& out, uns
     for (unsigned int d = 0; d < pts.shape[1]; d++)
     {
         #pragma omp parallel for
-        for (unsigned int i = 0; i < pts.shape[0]; i++)
+        for (int i = 0; i < pts.shape[0]; i++)
         {
             unsigned int select = 0;
-            out[{i, d}] = 0.0;
+            out[{(uint32_t)i, d}] = 0.0;
 
             for (unsigned int depth = 0; depth < depth_max; depth++)
             {
                 const bool   flipBit   = (thetas[d][select]  >= 0.5);
                 const double fuzzyFlip = (flipBit - !flipBit) * 1e10;
 
-                auto flip = DFF(pts[{i, d, depth}], fuzzyFlip);
+                auto flip = DFF(pts[{(uint32_t)i, d, depth}], fuzzyFlip);
 
-                out[{i, d}] += flip.first / (1 << (depth + 1));
-                select = 2 * select + pts[{i, d, depth}] + 1;
+                out[{(uint32_t)i, d}] += flip.first / (1 << (depth + 1));
+                select = 2 * select + pts[{(uint32_t)i, d, depth}] + 1;
             }
 
             // Copy remaining bits 
             for (unsigned int depth = depth_max; depth < pts.shape[2]; depth++)
-                out[{i, d}] += pts[{i, d, depth}] / (double)(1 << (depth + 1));
+                out[{(uint32_t)i, d}] += pts[{(uint32_t)i, d, depth}] / (double)(1 << (depth + 1));
         }
     }
 }

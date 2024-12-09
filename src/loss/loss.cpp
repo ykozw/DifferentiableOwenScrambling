@@ -139,11 +139,11 @@ double W2Loss3D(const PointArray& array, PointArray& grad)
 
     const double norm = 2.0 / (double)array.shape[0];
     #pragma omp parallel for
-    for (unsigned int i = 0; i < grad.shape[0]; i++)
+    for (int i = 0; i < grad.shape[0]; i++)
     {
         for (unsigned int j = 0; j < grad.shape[1]; j++)
         {
-            grad[{i, j}] = norm * (array[{i, j}] - grad[{i, j}]);
+            grad[{(uint32_t)i, j}] = norm * (array[{(uint32_t)i, j}] - grad[{(uint32_t)i, j}]);
         }
     }
 

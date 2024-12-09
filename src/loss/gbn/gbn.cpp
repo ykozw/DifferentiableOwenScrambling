@@ -41,20 +41,20 @@ double gbn_toroidal_forward_backward(const PointArray& array, PointArray& grad, 
     grad.zeros();
 
     #pragma omp parallel for reduction(+: rloss)
-    for (unsigned int k = 0; k < N; k++)
+    for (int k = 0; k < N; k++)
     {
         for (unsigned int l = 0; l < N; l++)
         {
             double dist = 0.;
             for (unsigned int d = 0; d < D; d++)
             {
-                double dx = toroidal_warp_unsigned<double>(std::abs(array[{k, d}] - array[{l, d}]));
+                double dx = toroidal_warp_unsigned<double>(std::abs(array[{(uint32_t)k, d}] - array[{l, d}]));
                 dist += dx * dx;
             }
             
             const double weight = std::exp(invSigma * dist) * invN;
             for (unsigned int d = 0; d < D; d++)
-                grad[{k, d}] += weight * toroidal_warp_signed<double>(array[{k, d}] - array[{l, d}]);
+                grad[{(uint32_t)k, d}] += weight * toroidal_warp_signed<double>(array[{(uint32_t)k, d}] - array[{l, d}]);
 
             rloss += weight * norm;
         }   
@@ -78,20 +78,20 @@ double gbn_euclidean_forward_backward(const PointArray& array, PointArray& grad,
     grad.zeros();
 
     #pragma omp parallel for reduction(+: rloss)
-    for (unsigned int k = 0; k < N; k++)
+    for (int k = 0; k < N; k++)
     {
         for (unsigned int l = 0; l < N; l++)
         {
             double dist = 0.;
             for (unsigned int d = 0; d < D; d++)
             {
-                double dx = (array[{k, d}] - array[{l, d}]);
+                double dx = (array[{(uint32_t)k, d}] - array[{l, d}]);
                 dist += dx * dx;
             }
             
             const double weight = std::exp(invSigma * dist) * invN;
             for (unsigned int d = 0; d < D; d++)
-                grad[{k, d}] += weight * (array[{l, d}] - array[{k, d}]);
+                grad[{(uint32_t)k, d}] += weight * (array[{l, d}] - array[{(uint32_t)k, d}]);
 
             rloss += weight;
         }   

@@ -38,6 +38,7 @@ add_compile_definitions(DATA_PATH="${CMAKE_SOURCE_DIR}/data")
 
 
 target_include_directories(SOURCES PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_compile_options(SOURCES PRIVATE "/openmp")
 
 
 function(create_exe exename mainname)
