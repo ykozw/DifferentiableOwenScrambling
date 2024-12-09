@@ -5,19 +5,11 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE "Release")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 option(WITH_GEOGRAM "Build with geogram" OFF)
 option(WITH_UTK "Build with UTK" OFF)
 
-include(openmp)
 include(cli11)
-
-IF (${WITH_GEOGRAM})
-    # include(geogram)
-    # message("Adding with geogram flagg")
-    # add_compile_definitions(WITH_GEOGRAM)
-ENDIF()
 
 if (${WITH_UTK})
     include(utk)
@@ -45,30 +37,14 @@ ADD_LIBRARY(SOURCES
 add_compile_definitions(DATA_PATH="${CMAKE_SOURCE_DIR}/data")
 
 
-IF (${WITH_GEOGRAM})
-    target_link_libraries(SOURCES OpenMP::OpenMP_CXX)
-    # target_link_libraries(SOURCES OpenMP::OpenMP_CXX geogram exploragram)
-ELSE()
-    target_link_libraries(SOURCES OpenMP::OpenMP_CXX)
-ENDIF()
-
 target_include_directories(SOURCES PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
-IF (${WITH_GEOGRAM})
-    add_executable(OwenDiff3D src/main/main3d.cpp)
-    target_include_directories(OwenDiff3D PRIVATE ${CMAKE_SOURCE_DIR}/src)
-    target_link_libraries(OwenDiff3D SOURCES CLI11::CLI11)
-
-    
-    add_executable(W23D src/main/eval_3d.cpp)
-    target_include_directories(W23D PRIVATE ${CMAKE_SOURCE_DIR}/src)
-    target_link_libraries(W23D SOURCES CLI11::CLI11)
-ENDIF()
 
 function(create_exe exename mainname)
     add_executable(${exename} src/main/main_${mainname}.cpp)
     target_include_directories(${exename} PRIVATE ${CMAKE_SOURCE_DIR}/src)
     target_link_libraries(${exename} SOURCES CLI11::CLI11)
+    target_compile_options(${exename} PRIVATE "/openmp")
 endfunction()
 
 create_exe(DifferentiableOwenW2 w2)
