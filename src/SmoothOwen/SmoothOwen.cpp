@@ -52,19 +52,26 @@ uint32_t SmoothOwenScrambling::NumParamsPerDims() const
     return thetas[0].size();
 }
 
-void SmoothOwenScrambling::Export(const std::string& filename) const
+void SmoothOwenScrambling::Export(const std::string& filename, bool clamped) const
 {
-    std::ofstream out(filename.c_str());
-    out << std::setprecision(20) << std::fixed;
+	std::ofstream out(filename.c_str());
+	out << std::setprecision(20) << std::fixed;
 
-    for (unsigned int i = 0; i < thetas.size(); i++)
-    {
-        for (unsigned int d = 0; d < thetas[i].size(); d++)
-        {
-            out << thetas[i][{d}] << " ";
-        }
-        out << '\n';
-    }
+	for (unsigned int i = 0; i < thetas.size(); i++)
+	{
+		for (unsigned int d = 0; d < thetas[i].size(); d++)
+		{
+			if (clamped)
+			{
+				out << (thetas[i][{d}] > 0.5 ? 1 : 0);
+			}
+			else
+			{
+				out << thetas[i][{d}] << " ";
+			}
+		}
+		out << '\n';
+	}
 }
 
 void SmoothOwenScrambling::ExportGrad(const std::string& filename, const BinaryArray& pts, unsigned int d)

@@ -57,6 +57,7 @@ The scripts outputs multiple file:
 * {prefix}_soft.dat: points after optimization where the tree is not binarized
 * {prefix}_init.dat: initial points (after the starting random tree is applied, but before optimization)
 * {prefix}_soft_tree.txt: floating point values stored in the tree
+* {prefix}_clamped_tree.txt: integer values clamped to 0 or 1 from the {prefix}_soft_tree.txt, suitable for use with standard Owen Scramble
 
 where {prefix} is the parameter passed to the script
 
