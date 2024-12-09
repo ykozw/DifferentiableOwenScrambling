@@ -33,7 +33,7 @@ public:
     
     uint32_t NumParamsPerDims() const;
 
-    void Export(const std::string& filename) const;
+    void Export(const std::string& filename, bool clamped) const;
 
     void ExportGrad(const std::string& filename, const BinaryArray& pts, unsigned int dim);
 public: // Easy access to thetas

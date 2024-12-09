@@ -107,5 +107,6 @@ int main(int argc, char** argv)
     WritePts(out_prefix + "_soft.dat", pts);
     WritePts(out_prefix + "_" + std::to_string(Depth + 1) + ".dat", pts);     
 
-    scrambling.Export(out_prefix + "_tree_soft.txt");   
+    scrambling.Export(out_prefix + "_tree_soft.txt", false);
+    scrambling.Export(out_prefix + "_tree_hard.txt", true);
 }
